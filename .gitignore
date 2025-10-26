@@ -45,6 +45,7 @@ __pycache__/
 
 # HTML outputs/reports
 *.html
+!Week4/rag_learning_tree_riyaz.html
 
 # pip/egg metadata
 dist/
