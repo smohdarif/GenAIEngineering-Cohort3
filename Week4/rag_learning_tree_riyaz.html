@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Learning Tree</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        header h1 {
+            font-size: 3.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+
+        .tree {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .level {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .node {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            min-width: 280px;
+            max-width: 320px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            border: 3px solid transparent;
+        }
+
+        .node:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            border-color: #667eea;
+        }
+
+        .node.foundation {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .node.core {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .node.storage {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+        }
+
+        .node.retrieval {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: white;
+        }
+
+        .node.generation {
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+            color: white;
+        }
+
+        .node.advanced {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+        }
+
+        .node-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .icon {
+            font-size: 2.5em;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .node h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .node p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            opacity: 0.95;
+        }
+
+        .details {
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 15px;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        .node.active .details {
+            display: block;
+        }
+
+        .details h4 {
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .details ul {
+            list-style-position: inside;
+            line-height: 1.8;
+        }
+
+        .level-label {
+            text-align: center;
+            color: white;
+            font-size: 1.8em;
+            font-weight: bold;
+            margin: 20px 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .connector {
+            text-align: center;
+            color: white;
+            font-size: 2em;
+            margin: 10px 0;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 500px;
+            }
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.3);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 50px;
+            padding: 20px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+            
+            .node {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌳 RAG Learning Tree</h1>
+            <p>Your Complete Guide to Retrieval Augmented Generation</p>
+        </header>
+
+        <div class="tree">
+            <!-- Level 1: Foundation -->
+            <div class="level-label">🌱 Level 1: Foundation</div>
+            <div class="level">
+                <div class="node foundation" onclick="toggleDetails(this)">
+                    <div class="node-header">
+                        <div class="icon">📄</div>
+                        <h3>Document Processing</h3>
+                    </div>
+                    <p>Loading and extracting text from various document formats</p>
+                    <span class="badge">START HERE</span>
+                    <div class="details">
+                        <h4>Key Concepts:</h4>
+                        <ul>
+                            <li>PDF text extraction</li>
+                            <li>Text cleaning & normalization</li>
+                            <li>Handling different formats</li>
+                            <li>Character encoding</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="node foundation" onclick="toggleDetails(this)">
+                    <div class="node-header">
+                        <div class="icon">✂️</div>
+                        <h3>Text Chunking</h3>
+                    </div>
+                    <p>Breaking documents into manageable pieces</p>
+                    <span class="badge">CRITICAL</span>
+                    <div class="details">
+                        <h4>Strategies:</h4>
+                        <ul>
+                            <li>Fixed-size chunking</li>
+                            <li>Sentence-based splitting</li>
+                            <li>Semantic chunking</li>
+                            <li>Overlap strategies</li>
+                            <li>Chunk size optimization</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="connector">↓</div>
+
+            <!-- Level 2: Core Concepts -->
+            <div class="level-label">🧠 Level 2: Core Concepts</div>
+            <div class="level">
+                <div class="node core" onclick="toggleDetails(this)">
+                    <div class="node-header">
+                        <div class="icon">🔢</div>
+                        <h3>Embeddings</h3>
+                    </div>
+                    <p>Converting text into numerical vectors</p>
+                    <span class="badge">ESSENTIAL</span>
+                    <div class="details">
+                        <h4>Learn About:</h4>
+                        <ul>
+                            <li>What are embeddings?</li>
+                            <li>Vector dimensions</li>
+                            <li>Embedding models (OpenAI, Mistral, HuggingFace)</li>
+                            <li>Semantic similarity</li>
+                            <li>Cosine similarity</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="node core" onclick="toggleDetails(this)">
+                    <div class="node-header">
+                        <div class="icon">📐</div>
+                        <h3>Vector Space</h3>
+                    </div>
+                    <p>Understanding how vectors represent meaning</p>
+                    <span class="badge">THEORY</span>
+                    <div class="details">
+                        <h4>Concepts:</h4>
+                        <ul>
+                            <li>High-dimensional space</li>
+                            <li>Distance metrics</li>
+                            <li>Vector normalization</li>
+                            <li>Semantic relationships</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="connector">↓</div>
+
+            <!-- Level 3: Vector Storage -->
+            <div class="level-label">💾 Level 3: Vector Storage</div>
+            <div class="level">
+                <div class="node storage" onclick="toggleDetails(this)">
+                    <div class="node-header">
+                        <div class="icon">🗄️</div>
+                        <h3>FAISS</h3>
+                    </div>
+                    <p>Facebook AI Similarity Search - Fast in-memory search</p>
+                    <span class="badge">POPULAR</span>
+                    <div class="details">
+                        <h4>Features:</h4>
+                        <ul>
+                            <li>Lightning-fast search</li>
+                            <li>Multiple index types</li>
+                            <li>CPU/GPU support</li>
+                            <li>Scalable to billions</li>
+                            <li>Best for: Speed & scale</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="node storage" onclick="toggleDetails(this)">
+                    <div class="node-header">
+                        <div class="icon">🦅</div>
+                        <h3>LanceDB</h3>
+                    </div>
+                    <p>Modern vector database with versioning</p>
+                    <span class="badge">MODERN</span>
+                    <div class="details">
+                        <h4>Advantages:</h4>
+                        <ul>
+                            <li>Built-in versioning</li>
+                            <li>SQL-like queries</li>
+                            <li>Automatic indexing</li>
+                            <li>Hybrid search</li>
+                            <li>Best for: Production apps</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="node storage" onclick="toggleDetails(this)">
+                    <div class="node-header">
+                        <div class="icon">🌲</div>
+                        <h3>Pinecone</h3>
+                    </div>
+                    <p>Managed vector database service</p>
+                    <span class="badge">CLOUD</span>
+                    <div class="details">
+                        <h4>Benefits:</h4>
+                        <ul>
+                            <li>Fully managed</li>
+                            <li>Auto-scaling</li>
+                            <li>High availability</li>
+                            <li>Metadata filtering</li>
+                            <li>Best for: No DevOps</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="node storage" onclick="toggleDetails(this)">
+                    <div class="node-header">
+                        <div class="icon">🔮</div>
+                        <h3>Chroma</h3>
+                    </div>
+                    <p>Simple, developer-friendly vector DB</p>
+                    <span class="badge">EASY</span>
+                    <div class="details">
+                        <h4>Why Use:</h4>
+                        <ul>
+                            <li>Simple API</li>
+                            <li>Built-in embeddings</li>
+                            <li>Great documentation</li>
+                            <li>Local-first</li>
+                            <li>Best for: Prototyping</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="connector">↓</div>
+
+            <!-- Level 4: Retrieval -->
+            <div class="level-label">🔍 Level 4: Retrieval</div>
+            <div class="level">
+                <div class="node retrieval" onclick="toggleDetails(this)">
+                    <div class="node-header">
+                        <div class="icon">🎯</div>
+                        <h3>Semantic Search</h3>
+                    </div>
+                    <p>Finding relevant documents by meaning</p>
+                    <span class="badge">CORE</span>
+                    <div class="details">
+                        <h4>Techniques:</h4>
+                        <ul>
+                            <li>Query embedding</li>
+                            <li>Similarity ranking</li>
+                            <li>Top-K retrieval</li>
+                            <li>Score thresholds</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="node retrieval" onclick="toggleDetails(this)">
+                    <div class="node-header">
+                        <div class="icon">🔄</div>
+                        <h3>Hybrid Search</h3>
+                    </div>
+                    <p>Combining semantic and keyword search</p>
+                    <span class="badge">ADVANCED</span>
+                    <div class="details">
+                        <h4>Methods:</h4>
+                        <ul>
+                            <li>BM25 + Vector search</li>
+                            <li>Score fusion</li>
+                            <li>Reranking</li>
+                            <li>Best of both worlds</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="node retrieval" onclick="toggleDetails(this)">
+                    <div class="node-header">
+                        <div class="icon">🏷️</div>
+                        <h3>Metadata Filtering</h3>
+                    </div>
+                    <p>Narrowing results with structured data</p>
+                    <span class="badge">PRACTICAL</span>
+                    <div class="details">
+                        <h4>Use Cases:</h4>
+                        <ul>
+                            <li>Filter by date</li>
+                            <li>Filter by category</li>
+                            <li>Filter by author</li>
+                            <li>Multi-tenant apps</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="connector">↓</div>
+
+            <!-- Level 5: Generation -->
+            <div class="level-label">✨ Level 5: Generation</div>
+            <div class="level">
+                <div class="node generation" onclick="toggleDetails(this)">
+                    <div class="node-header">
+                        <div class="icon">🤖</div>
+                        <h3>LLM Integration</h3>
+                    </div>
+                    <p>Connecting to language models</p>
+                    <span class="badge">CRUCIAL</span>
+                    <div class="details">
+                        <h4>Models:</h4>
+                        <ul>
+                            <li>OpenAI GPT-4</li>
+                            <li>Anthropic Claude</li>
+                            <li>Mistral AI</li>
+                            <li>Local models (Llama)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="node generation" onclick="toggleDetails(this)">
+                    <div class="node-header">
+                        <div class="icon">📝</div>
+                        <h3>Prompt Engineering</h3>
+                    </div>
+                    <p>Crafting effective prompts with context</p>
+                    <span class="badge">SKILL</span>
+                    <div class="details">
+                        <h4>Best Practices:</h4>
+                        <ul>
+                            <li>Context injection</li>
+                            <li>System prompts</li>
+                            <li>Few-shot examples</li>
+                            <li>Citation instructions</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="node generation" onclick="toggleDetails(this)">
+                    <div class="node-header">
+                        <div class="icon">💬</div>
+                        <h3>Conversation Memory</h3>
+                    </div>
+                    <p>Maintaining context across turns</p>
+                    <span class="badge">UX</span>
+                    <div class="details">
+                        <h4>Approaches:</h4>
+                        <ul>
+                            <li>Message history</li>
+                            <li>Summary chains</li>
+                            <li>Context window management</li>
+                            <li>Session state</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="connector">↓</div>
+
+            <!-- Level 6: Advanced Topics -->
+            <div class="level-label">🚀 Level 6: Advanced Techniques</div>
+            <div class="level">
+                <div class="node advanced" onclick="toggleDetails(this)">
+                    <div class="node-header">
+                        <div class="icon">🔮</div>
+                        <h3>Query Expansion</h3>
+                    </div>
+                    <p>Enhancing queries for better retrieval</p>
+                    <span class="badge">PRO</span>
+                    <div class="details">
+                        <h4>Techniques:</h4>
+                        <ul>
+                            <li>HyDE (Hypothetical Document)</li>
+                            <li>Multi-query expansion</li>
+                            <li>Query rewriting</li>
+                            <li>Step-back prompting</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="node advanced" onclick="toggleDetails(this)">
+                    <div class="node-header">
+                        <div class="icon">🎓</div>
+                        <h3>Reranking</h3>
+                    </div>
+                    <p>Improving result relevance</p>
+                    <span class="badge">BOOST</span>
+                    <div class="details">
+                        <h4>Methods:</h4>
+                        <ul>
+                            <li>Cross-encoder models</li>
+                            <li>Cohere rerank</li>
+                            <li>MMR (Maximal Marginal Relevance)</li>
+                            <li>LLM-based reranking</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="node advanced" onclick="toggleDetails(this)">
+                    <div class="node-header">
+                        <div class="icon">🌐</div>
+                        <h3>Agentic RAG</h3>
+                    </div>
+                    <p>Multi-step reasoning and tool use</p>
+                    <span class="badge">CUTTING-EDGE</span>
+                    <div class="details">
+                        <h4>Capabilities:</h4>
+                        <ul>
+                            <li>Planning & routing</li>
+                            <li>Multi-hop reasoning</li>
+                            <li>Tool selection</li>
+                            <li>Self-correction</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="node advanced" onclick="toggleDetails(this)">
+                    <div class="node-header">
+                        <div class="icon">📊</div>
+                        <h3>Evaluation</h3>
+                    </div>
+                    <p>Measuring RAG performance</p>
+                    <span class="badge">IMPORTANT</span>
+                    <div class="details">
+                        <h4>Metrics:</h4>
+                        <ul>
+                            <li>Retrieval accuracy</li>
+                            <li>Answer relevance</li>
+                            <li>Faithfulness</li>
+                            <li>RAGAS framework</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="node advanced" onclick="toggleDetails(this)">
+                    <div class="node-header">
+                        <div class="icon">⚡</div>
+                        <h3>Optimization</h3>
+                    </div>
+                    <p>Speed and cost improvements</p>
+                    <span class="badge">SCALE</span>
+                    <div class="details">
+                        <h4>Strategies:</h4>
+                        <ul>
+                            <li>Caching</li>
+                            <li>Batch processing</li>
+                            <li>Index optimization</li>
+                            <li>Quantization</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>💡 <strong>Pro Tip:</strong> Click on any node to see more details!</p>
+            <p>Start from the top and work your way down. Each level builds on the previous one.</p>
+            <p style="margin-top: 20px; opacity: 0.8;">Happy Learning! 🎉</p>
+        </footer>
+    </div>
+
+    <script>
+        function toggleDetails(node) {
+            // Close all other nodes
+            document.querySelectorAll('.node').forEach(n => {
+                if (n !== node) {
+                    n.classList.remove('active');
+                }
+            });
+            
+            // Toggle current node
+            node.classList.toggle('active');
+        }
+
+        // Add staggered animation on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const levels = document.querySelectorAll('.level');
+            levels.forEach((level, index) => {
+                level.style.animationDelay = `${index * 0.2}s`;
+            });
+        });
+    </script>
+</body>
+</html>
