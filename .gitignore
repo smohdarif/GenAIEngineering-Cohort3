@@ -1,0 +1,60 @@
+# Python virtual environments
+venv/
+*/venv/
+venv_*/
+*/venv_*/
+**/venv_*/
+basecamp1venv/
+
+# PyCharm & VS Code
+.idea/
+.vscode/
+
+# OS files
+.DS_Store
+
+# Python cache and runtime files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Mac system files
+*.DS_Store
+
+# Log and database files
+*.log
+*.sqlite3
+
+# Environment files
+.env
+*.env
+
+# Data files
+*.csv
+*.tsv
+*.xls
+*.xlsx
+*.parquet
+*.feather
+*.h5
+*.db
+
+# HTML outputs/reports
+*.html
+
+# pip/egg metadata
+dist/
+build/
+*.egg-info/
+
+# User/tool-generated and temp files
+*.bak
+*.swp
+
+# Pytest cache
+**/__pycache__/
+**/.pytest_cache/
