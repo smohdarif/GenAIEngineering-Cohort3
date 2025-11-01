@@ -8,16 +8,27 @@ It provides search results with source citations including file names, page numb
 import streamlit as st
 import numpy as np
 import json
+import os
 from pathlib import Path
-from typing import List, Dict
+from typing import List, Dict, Optional, Tuple, Any
 import time
+from mistralai import Mistral
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Vector databases
 import faiss
 import lancedb
 
-# Embeddings
-from sentence_transformers import SentenceTransformer
+# Constants
+VECTOR_DB_PATH = Path("vector_dbs")
+FAISS_INDEX_PATH = VECTOR_DB_PATH / "faiss_index.bin"
+FAISS_METADATA_PATH = VECTOR_DB_PATH / "faiss_metadata.json"
+LANCEDB_PATH = VECTOR_DB_PATH / "lancedb"
+EMBEDDING_MODEL = "mistral-embed"
+CHAT_MODEL = "mistral-small-latest"
 
 # Configuration
 st.set_page_config(
@@ -74,214 +85,166 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-def load_embedding_model():
-    """Load the sentence transformer model."""
-    # if 'embedding_model' not in st.session_state:
-    if st.session_state.embedding_model is None:
-        with st.spinner("Loading embedding model..."):
-            st.session_state.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
-    print("Embedding model loaded.")
-    return st.session_state.embedding_model
+@st.cache_resource
+def get_mistral_client() -> Mistral:
+    """Initialize and return Mistral client."""
+    api_key = os.getenv("MISTRAL_API_KEY")
+    if not api_key:
+        st.error("Please set MISTRAL_API_KEY environment variable")
+        st.stop()
+    return Mistral(api_key=api_key)
 
 
-def load_faiss_index():
-    """Load FAISS index and metadata."""
-
-    # if 'faiss_index' not in st.session_state or 'faiss_metadata' not in st.session_state:
-    if st.session_state.faiss_index is None or st.session_state.faiss_metadata is None:
-        print("Loading FAISS index...")
-        try:
-            index_path = Path('vector_dbs/faiss_index.bin')
-            metadata_path = Path('vector_dbs/faiss_metadata.json')
-            print(index_path.exists(), metadata_path.exists())
-            if not index_path.exists() or not metadata_path.exists():
-                st.session_state.faiss_index = None
-                st.session_state.faiss_metadata = None
-                return None, None
-
-            st.session_state.faiss_index = faiss.read_index(str(index_path))
-
-            with open(metadata_path, 'r') as f:
-                st.session_state.faiss_metadata = json.load(f)
-
-
-        except Exception as e:
-            st.error(f"Error loading FAISS: {e}")
-            st.session_state.faiss_index = None
-            st.session_state.faiss_metadata = None
-            return None, None
-
-    return st.session_state.faiss_index, st.session_state.faiss_metadata
-
-
-def load_lancedb():
-    """Load LanceDB connection."""
-    # if 'lance_db' not in st.session_state or 'lance_table' not in st.session_state:
-    if st.session_state.lance_db is None or st.session_state.lance_table is None:
-        try:
-            db_path = Path('vector_dbs/lancedb')
-
-            if not db_path.exists():
-                st.session_state.lance_db = None
-                st.session_state.lance_table = None
-                return None, None
-
-            st.session_state.lance_db = lancedb.connect(str(db_path))
-            st.session_state.lance_table = st.session_state.lance_db.open_table('document_chunks')
-
-        except Exception as e:
-            st.error(f"Error loading LanceDB: {e}")
-            st.session_state.lance_db = None
-            st.session_state.lance_table = None
-            return None, None
-
-    return st.session_state.lance_db, st.session_state.lance_table
-
-def semantic_search_faiss(query: str, model, index, metadata, k: int = 5) -> List[Dict]:
-    """Perform semantic search using FAISS."""
-    if index is None or metadata is None:
-        return []
-
+@st.cache_resource
+def load_faiss() -> Tuple[Optional[faiss.Index], Optional[List[Dict]], bool]:
+    """Load FAISS index and metadata, auto-detecting normalization."""
     try:
-        # Generate query embedding
-        query_embedding = model.encode([query])[0]
+        if not FAISS_INDEX_PATH.exists():
+            st.warning(f"FAISS index not found at {FAISS_INDEX_PATH}")
+            return None, None, False
 
-        # Convert to float32 numpy array
-        query_embedding = np.array(query_embedding, dtype='float32')
+        # Load FAISS index
+        index = faiss.read_index(str(FAISS_INDEX_PATH))
 
-        # Reshape to 2D array (1 row, N columns)
+        # Load metadata
+        metadata = None
+        if FAISS_METADATA_PATH.exists():
+            with open(FAISS_METADATA_PATH, 'r') as f:
+                metadata = json.load(f)
+
+        # Auto-detect normalization
+        uses_normalization = False
+        if index.ntotal > 0:
+            try:
+                vec = index.reconstruct(0)
+                norm = np.linalg.norm(vec)
+                uses_normalization = abs(norm - 1.0) < 0.01
+            except Exception:
+                uses_normalization = False
+
+        st.success(f"✓ Loaded FAISS index with {index.ntotal} vectors")
+        return index, metadata, uses_normalization
+
+    except Exception as e:
+        st.error(f"Error loading FAISS: {e}")
+        return None, None, False
+
+
+@st.cache_resource
+def load_lancedb() -> Optional[Any]:
+    """Load LanceDB table."""
+    try:
+        if not LANCEDB_PATH.exists():
+            st.warning(f"LanceDB not found at {LANCEDB_PATH}")
+            return None
+
+        db = lancedb.connect(str(LANCEDB_PATH))
+        tables = db.table_names()
+
+        if not tables:
+            st.warning("No tables found in LanceDB")
+            return None
+
+        table = db.open_table(tables[0])
+        st.success(f"✓ Loaded LanceDB table: {tables[0]}")
+        return table
+
+    except Exception as e:
+        st.error(f"Error loading LanceDB: {e}")
+        return None
+
+
+def get_embedding(client: Mistral, text: str) -> Optional[np.ndarray]:
+    """Get embedding for text using Mistral."""
+    try:
+        response = client.embeddings.create(
+            model=EMBEDDING_MODEL,
+            inputs=[text]
+        )
+        return np.array(response.data[0].embedding, dtype='float32')
+    except Exception as e:
+        st.error(f"Error getting embedding: {e}")
+        return None
+
+
+def search_faiss(
+    client: Mistral,
+    index: faiss.Index,
+    metadata: List[Dict],
+    use_normalization: bool,
+    query: str,
+    top_k: int = 5
+) -> List[Dict]:
+    """Search FAISS for relevant documents using Mistral embeddings."""
+    try:
+        # Get query embedding
+        query_embedding = get_embedding(client, query)
+        if query_embedding is None:
+            return []
+
+        # Convert to proper FAISS format
         query_embedding = query_embedding.reshape(1, -1)
-
-        # Ensure contiguous memory layout (CRITICAL for FAISS)
         query_embedding = np.ascontiguousarray(query_embedding)
 
-        # Normalize for cosine similarity (if your index uses normalized vectors)
-        # Comment this line out if your index doesn't use normalization
-        faiss.normalize_L2(query_embedding)
+        # Normalize if needed
+        if use_normalization:
+            faiss.normalize_L2(query_embedding)
 
         # Search
-        distances, indices = index.search(query_embedding, k)
+        distances, indices = index.search(query_embedding, top_k)
 
-        # Prepare results
+        # Format results
         results = []
-        for idx, distance in zip(indices[0], distances[0]):
-            if idx < len(metadata):
+        for dist, idx in zip(distances[0], indices[0]):
+            if 0 <= idx < len(metadata):
                 result = metadata[idx].copy()
-                result['distance'] = float(distance)
-                result['similarity_score'] = 1 / (1 + distance)
+                result['distance'] = float(dist)
+                result['similarity_score'] = 1 / (1 + dist)
                 results.append(result)
 
         return results
 
     except Exception as e:
-        st.error(f"Error in FAISS search: {e}")
+        st.error(f"Error searching FAISS: {e}")
         return []
 
 
-def hybrid_search(query: str, model, index, metadata, k: int = 5,
-                 keyword_weight: float = 0.3, semantic_weight: float = 0.7) -> List[Dict]:
-    """Combine keyword and semantic search."""
+def search_lancedb(
+    client: Mistral,
+    table: Any,
+    query: str,
+    top_k: int = 5
+) -> List[Dict]:
+    """Search LanceDB for relevant documents using Mistral embeddings."""
     try:
-        # Get both types of results
-        keyword_results = keyword_search(query, metadata, k=k*2)
-        semantic_results = semantic_search_faiss(query, model, index, metadata, k=k*2)
+        # Get query embedding
+        query_embedding = get_embedding(client, query)
+        if query_embedding is None:
+            return []
 
-        # Create score dictionary
-        hybrid_scores = {}
+        # Search the table
+        results = table.search(query_embedding.tolist()).limit(top_k).to_list()
 
-        # Add keyword scores
-        for result in keyword_results:
-            chunk_id = result['chunk_id']
-            hybrid_scores[chunk_id] = {
-                'chunk': result,
-                'keyword_score': result['keyword_score'],
-                'semantic_score': 0.0
+        # Format results
+        documents = []
+        for result in results:
+            doc = {
+                'text': result.get('text', result.get('content', str(result))),
+                'distance': result.get('_distance', 0),
+                'similarity_score': 1 / (1 + result.get('_distance', 0)),
+                'file_name': result.get('file_name', 'Unknown'),
+                'page_number': result.get('page_number', 0),
+                'chunk_number': result.get('chunk_number', 0),
+                'chunk_id': result.get('chunk_id', 'N/A'),
+                'char_count': result.get('char_count', 0)
             }
+            documents.append(doc)
 
-        # Add/update with semantic scores
-        for result in semantic_results:
-            chunk_id = result['chunk_id']
-            if chunk_id in hybrid_scores:
-                hybrid_scores[chunk_id]['semantic_score'] = result['similarity_score']
-            else:
-                hybrid_scores[chunk_id] = {
-                    'chunk': result,
-                    'keyword_score': 0.0,
-                    'semantic_score': result['similarity_score']
-                }
-
-        # Calculate hybrid scores
-        final_results = []
-        for chunk_id, scores in hybrid_scores.items():
-            chunk = scores['chunk']
-            hybrid_score = (keyword_weight * scores['keyword_score'] +
-                          semantic_weight * scores['semantic_score'])
-
-            chunk['hybrid_score'] = hybrid_score
-            chunk['keyword_score'] = scores['keyword_score']
-            chunk['semantic_score'] = scores['semantic_score']
-            final_results.append(chunk)
-
-        # Sort by hybrid score
-        final_results.sort(key=lambda x: x['hybrid_score'], reverse=True)
-
-        return final_results[:k]
+        return documents
 
     except Exception as e:
-        st.error(f"Error in hybrid search: {e}")
+        st.error(f"Error searching LanceDB: {e}")
         return []
-
-# def semantic_search_faiss(query: str, model, index, metadata, k: int = 5) -> List[Dict]:
-#     """Perform semantic search using FAISS."""
-#     if index is None or metadata is None:
-#         return []
-
-#     # Generate query embedding
-#     query_embedding = model.encode([query])[0].astype('float32')
-#     query_embedding = np.array([query_embedding])
-
-#     # Search
-#     distances, indices = index.search(query_embedding, k)
-
-#     # Prepare results
-#     results = []
-#     for idx, distance in zip(indices[0], distances[0]):
-#         if idx < len(metadata):
-#             result = metadata[idx].copy()
-#             result['distance'] = float(distance)
-#             result['similarity_score'] = 1 / (1 + distance)
-#             results.append(result)
-
-#     return results
-
-
-def semantic_search_lancedb(query: str, model, table, k: int = 5) -> List[Dict]:
-    """Perform semantic search using LanceDB."""
-    if table is None:
-        return []
-
-    # Generate query embedding
-    query_embedding = model.encode([query])[0]
-
-    # Search
-    results = table.search(query_embedding).limit(k).to_list()
-
-    # Format results
-    formatted_results = []
-    for result in results:
-        formatted_result = {
-            'chunk_id': result['chunk_id'],
-            'text': result['text'],
-            'file_name': result['file_name'],
-            'page_number': result['page_number'],
-            'chunk_number': result['chunk_number'],
-            'char_count': result['char_count'],
-            'distance': result['_distance'],
-            'similarity_score': 1 / (1 + result['_distance'])
-        }
-        formatted_results.append(formatted_result)
-
-    return formatted_results
 
 
 def keyword_search(query: str, metadata: List[Dict], k: int = 5) -> List[Dict]:
@@ -291,7 +254,7 @@ def keyword_search(query: str, metadata: List[Dict], k: int = 5) -> List[Dict]:
 
     results = []
     for chunk in metadata:
-        text_lower = chunk['text'].lower()
+        text_lower = chunk.get('text', '').lower()
 
         # Count term matches
         matches = sum(1 for term in query_terms if term in text_lower)
@@ -305,57 +268,68 @@ def keyword_search(query: str, metadata: List[Dict], k: int = 5) -> List[Dict]:
 
     # Sort by score
     results.sort(key=lambda x: x['keyword_score'], reverse=True)
-
     return results[:k]
 
 
-def hybrid_search(query: str, model, index, metadata, k: int = 5,
-                 keyword_weight: float = 0.3, semantic_weight: float = 0.7) -> List[Dict]:
+def hybrid_search(
+    query: str,
+    client: Mistral,
+    index: faiss.Index,
+    metadata: List[Dict],
+    use_normalization: bool,
+    k: int = 5,
+    keyword_weight: float = 0.3,
+    semantic_weight: float = 0.7
+) -> List[Dict]:
     """Combine keyword and semantic search."""
-    # Get both types of results
-    keyword_results = keyword_search(query, metadata, k=k*2)
-    semantic_results = semantic_search_faiss(query, model, index, metadata, k=k*2)
+    try:
+        # Get both types of results
+        keyword_results = keyword_search(query, metadata, k=k*2)
+        semantic_results = search_faiss(client, index, metadata, use_normalization, query, top_k=k*2)
 
-    # Create score dictionary
-    hybrid_scores = {}
+        # Create score dictionary
+        hybrid_scores = {}
 
-    # Add keyword scores
-    for result in keyword_results:
-        chunk_id = result['chunk_id']
-        hybrid_scores[chunk_id] = {
-            'chunk': result,
-            'keyword_score': result['keyword_score'],
-            'semantic_score': 0.0
-        }
-
-    # Add/update with semantic scores
-    for result in semantic_results:
-        chunk_id = result['chunk_id']
-        if chunk_id in hybrid_scores:
-            hybrid_scores[chunk_id]['semantic_score'] = result['similarity_score']
-        else:
+        # Add keyword scores
+        for result in keyword_results:
+            chunk_id = result.get('chunk_id', id(result))
             hybrid_scores[chunk_id] = {
                 'chunk': result,
-                'keyword_score': 0.0,
-                'semantic_score': result['similarity_score']
+                'keyword_score': result['keyword_score'],
+                'semantic_score': 0.0
             }
 
-    # Calculate hybrid scores
-    results = []
-    for chunk_id, scores in hybrid_scores.items():
-        hybrid_score = (keyword_weight * scores['keyword_score'] +
-                       semantic_weight * scores['semantic_score'])
+        # Add/update with semantic scores
+        for result in semantic_results:
+            chunk_id = result.get('chunk_id', id(result))
+            if chunk_id in hybrid_scores:
+                hybrid_scores[chunk_id]['semantic_score'] = result['similarity_score']
+            else:
+                hybrid_scores[chunk_id] = {
+                    'chunk': result,
+                    'keyword_score': 0.0,
+                    'semantic_score': result['similarity_score']
+                }
 
-        result = scores['chunk'].copy()
-        result['keyword_score'] = scores['keyword_score']
-        result['semantic_score'] = scores['semantic_score']
-        result['hybrid_score'] = hybrid_score
-        results.append(result)
+        # Calculate hybrid scores
+        final_results = []
+        for chunk_id, scores in hybrid_scores.items():
+            chunk = scores['chunk'].copy()
+            hybrid_score = (keyword_weight * scores['keyword_score'] +
+                          semantic_weight * scores['semantic_score'])
 
-    # Sort by hybrid score
-    results.sort(key=lambda x: x['hybrid_score'], reverse=True)
+            chunk['hybrid_score'] = hybrid_score
+            chunk['keyword_score'] = scores['keyword_score']
+            chunk['semantic_score'] = scores['semantic_score']
+            final_results.append(chunk)
 
-    return results[:k]
+        # Sort by hybrid score
+        final_results.sort(key=lambda x: x['hybrid_score'], reverse=True)
+        return final_results[:k]
+
+    except Exception as e:
+        st.error(f"Error in hybrid search: {e}")
+        return []
 
 
 def display_result(result: Dict, rank: int, search_type: str):
@@ -379,7 +353,10 @@ def display_result(result: Dict, rank: int, search_type: str):
     col1, col2 = st.columns([3, 1])
 
     with col1:
-        st.markdown(f"<div class='citation'>📄 <b>{result['file_name']}</b> | Page {result['page_number']} | Chunk {result['chunk_number']}</div>",
+        file_name = result.get('file_name', 'Unknown')
+        page_num = result.get('page_number', 'N/A')
+        chunk_num = result.get('chunk_number', 'N/A')
+        st.markdown(f"<div class='citation'>📄 <b>{file_name}</b> | Page {page_num} | Chunk {chunk_num}</div>",
                    unsafe_allow_html=True)
 
     with col2:
@@ -388,7 +365,7 @@ def display_result(result: Dict, rank: int, search_type: str):
 
     # Text content
     st.markdown("**Content:**")
-    st.write(result['text'])
+    st.write(result.get('text', 'No text available'))
 
     # Additional details in expander
     with st.expander("📊 Details"):
@@ -406,18 +383,6 @@ def display_result(result: Dict, rank: int, search_type: str):
 def main():
     """Main application."""
 
-    # Initialize session state
-    if 'embedding_model' not in st.session_state:
-        st.session_state.embedding_model = None
-    if 'faiss_index' not in st.session_state:
-        st.session_state.faiss_index = None
-    if 'faiss_metadata' not in st.session_state:
-        st.session_state.faiss_metadata = None
-    if 'lance_db' not in st.session_state:
-        st.session_state.lance_db = None
-    if 'lance_table' not in st.session_state:
-        st.session_state.lance_table = None
-
     # Header
     st.markdown('<h1 class="main-header">🔍 Vector Database Search Engine</h1>',
                 unsafe_allow_html=True)
@@ -427,11 +392,11 @@ def main():
     Powered by semantic search using vector embeddings and similarity matching
     </p>
     """, unsafe_allow_html=True)
-    print("Loading models...")
+
     # Load resources
-    model = load_embedding_model()
-    faiss_index, faiss_metadata = load_faiss_index()
-    lance_db, lance_table = load_lancedb()
+    client = get_mistral_client()
+    faiss_index, faiss_metadata, use_normalization = load_faiss()
+    lance_table = load_lancedb()
 
     # Check if databases are loaded
     databases_available = []
@@ -484,7 +449,7 @@ def main():
             help="How many search results to display"
         )
 
-        # Hybrid weights (only show for hybrid search)
+        # Hybrid weights
         keyword_weight = 0.3
         semantic_weight = 0.7
         if search_type == "Hybrid":
@@ -502,14 +467,15 @@ def main():
         # Info
         st.markdown("---")
         st.subheader("ℹ️ About")
+        doc_count = len(faiss_metadata) if faiss_metadata else 0
         st.info(f"""
         **Database:** {db_choice}
 
-        **Documents:** {len(faiss_metadata) if faiss_metadata else 0} chunks
+        **Documents:** {doc_count} chunks
 
-        **Model:** all-MiniLM-L6-v2
+        **Model:** Mistral Embed
 
-        **Embedding Dim:** 384
+        **API:** Mistral AI
         """)
 
     # Main search area
@@ -538,31 +504,58 @@ def main():
             # Perform search based on type and database
             if db_choice == "FAISS":
                 if search_type == "Semantic":
-                    results = semantic_search_faiss(query, model, faiss_index,
-                                                   faiss_metadata, k=num_results)
+                    results = search_faiss(client, faiss_index, faiss_metadata,
+                                         use_normalization, query, top_k=num_results)
                 elif search_type == "Keyword":
                     results = keyword_search(query, faiss_metadata, k=num_results)
                 else:  # Hybrid
-                    results = hybrid_search(query, model, faiss_index, faiss_metadata,
-                                          k=num_results, keyword_weight=keyword_weight,
+                    results = hybrid_search(query, client, faiss_index, faiss_metadata,
+                                          use_normalization, k=num_results,
+                                          keyword_weight=keyword_weight,
                                           semantic_weight=semantic_weight)
             else:  # LanceDB
                 if search_type == "Semantic":
-                    results = semantic_search_lancedb(query, model, lance_table,
-                                                     k=num_results)
+                    results = search_lancedb(client, lance_table, query, top_k=num_results)
                 elif search_type == "Keyword":
-                    # For LanceDB, we'll convert to pandas and use keyword search
                     all_data = lance_table.to_pandas().to_dict('records')
                     results = keyword_search(query, all_data, k=num_results)
                 else:  # Hybrid
-                    # Get data for keyword search
                     all_data = lance_table.to_pandas().to_dict('records')
                     keyword_results = keyword_search(query, all_data, k=num_results*2)
-                    semantic_results = semantic_search_lancedb(query, model,
-                                                              lance_table, k=num_results*2)
+                    semantic_results = search_lancedb(client, lance_table, query, top_k=num_results*2)
 
-                    # Combine (simplified hybrid for LanceDB)
-                    results = semantic_results[:num_results]
+                    # Simple hybrid combination for LanceDB
+                    hybrid_scores = {}
+                    for res in keyword_results:
+                        chunk_id = res.get('chunk_id', id(res))
+                        hybrid_scores[chunk_id] = {
+                            'chunk': res,
+                            'keyword_score': res['keyword_score'],
+                            'semantic_score': 0.0
+                        }
+
+                    for res in semantic_results:
+                        chunk_id = res.get('chunk_id', id(res))
+                        if chunk_id in hybrid_scores:
+                            hybrid_scores[chunk_id]['semantic_score'] = res['similarity_score']
+                        else:
+                            hybrid_scores[chunk_id] = {
+                                'chunk': res,
+                                'keyword_score': 0.0,
+                                'semantic_score': res['similarity_score']
+                            }
+
+                    results = []
+                    for scores in hybrid_scores.values():
+                        chunk = scores['chunk'].copy()
+                        chunk['hybrid_score'] = (keyword_weight * scores['keyword_score'] +
+                                                semantic_weight * scores['semantic_score'])
+                        chunk['keyword_score'] = scores['keyword_score']
+                        chunk['semantic_score'] = scores['semantic_score']
+                        results.append(chunk)
+
+                    results.sort(key=lambda x: x['hybrid_score'], reverse=True)
+                    results = results[:num_results]
 
             search_time = time.time() - start_time
 
@@ -611,7 +604,7 @@ def main():
     st.markdown("""
     <div style='text-align: center; color: #666; padding: 2rem;'>
         <p><b>Vector Database Search Engine</b></p>
-        <p>Built with Streamlit, FAISS, LanceDB, and Sentence Transformers</p>
+        <p>Built with Streamlit, FAISS, LanceDB, and Mistral AI</p>
         <p>🔍 Semantic Search | 📊 Source Citations | ⚡ Fast Retrieval</p>
     </div>
     """, unsafe_allow_html=True)
