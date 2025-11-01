@@ -1,20 +1,22 @@
+# Core ML/Data Science stack
 sentence-transformers
 pandas
-ipykernel
-einops
-hf-xet
-mteb
+numpy
+matplotlib
+
+# Google Gemini/AI
 google-genai
-openai
-groq
+python-dotenv
+
+# LangChain (for text splitting)
 langchain-text-splitters
-beautifulsoup4
+langchain
 langchain-experimental
 langchain-huggingface
+
+# Web scraping/parsing
+beautifulsoup4
+
+# Vector databases
 lancedb
-fastapi
-uvicorn
-streamlit
-readability-lxml
-selenium
-webdriver-manager
+faiss-cpu
