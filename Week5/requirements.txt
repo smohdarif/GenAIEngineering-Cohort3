@@ -3,6 +3,7 @@ sentence-transformers
 pandas
 numpy
 matplotlib
+einops
 
 # Google Gemini/AI
 google-genai

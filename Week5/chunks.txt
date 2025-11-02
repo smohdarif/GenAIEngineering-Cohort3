@@ -1,0 +1,182 @@
+{'source': 'AWS', 'topic': 'Generic', 'text': 'Machine Learning  \nOverview  \nML services  \nInfrastructure  \nCustomers  \nLearn  \nMore  \nWhat is Cloud Computing  \n›  \nCloud Computing Concepts Hub  \n›  \nMachine Learning'} 
+----
+{'source': 'AWS', 'topic': 'Generic', 'text': 'Create an AWS account  \nWhat is Machine Learning?  \nWhat is machine learning in simple words?  \nWhat is the difference between machine learning vs. artificial intelligence?  \nWhat is the difference between machine learning vs'} 
+----
+{'source': 'AWS', 'topic': 'Generic', 'text': 'deep learning?  \nHow does machine learning work?  \nWhat are the benefits of machine learning?  \nWhat are machine learning use cases?  \nWhat are the types of machine learning algorithms?  \nAre machine learning models deterministic?  \nHow can you implement machine learning in your organization'} 
+----
+{'source': 'AWS', 'topic': 'Generic', 'text': 'What are the challenges in machine learning implementation?  \nWhat is machine learning training for beginners?  \nHow can AWS machine learning help'} 
+----
+{'source': 'AWS', 'topic': 'What is Machine Learning?', 'text': 'Machine learning is a type of artificial intelligence that performs data analysis tasks without explicit instructions. Machine learning technology can process large quantities of historical data, identify patterns, and predict new relationships between previously unknown data'} 
+----
+{'source': 'AWS', 'topic': 'What is Machine Learning?', 'text': 'You can perform classification and prediction tasks on documents, images, numbers, and other data types.  \nFor example, a financial organization could train a machine learning system to classify fraudulent and genuine transactions'} 
+----
+{'source': 'AWS', 'topic': 'What is Machine Learning?', 'text': 'The system identifies patterns in known data to accurately guess or predict whether a new transaction is genuine'} 
+----
+{'source': 'AWS', 'topic': 'What is machine learning in simple words?', 'text': 'ML is short for Machine Learning which is a branch of artificial intelligence (AI) and computer science that leverages data and algorithms to enable AI systems to learn and improve in a manner similar to humans, progressively enhancing their accuracy over time.'} 
+----
+{'source': 'AWS', 'topic': 'What is the difference between machine learning vs. artificial intelligence?', 'text': 'While the terms and are used interchangeably, they are not the same. Machine learning is one of many branches of AI. While machine learning is AI, not all AI activities can be called machine learning'} 
+----
+{'source': 'AWS', 'topic': 'What is the difference between machine learning vs. artificial intelligence?', 'text': 'machine learning  \nartificial intelligence (AI)  \nArtificial intelligence is an umbrella term for different strategies and techniques used to make machines more human-like'} 
+----
+{'source': 'AWS', 'topic': 'What is the difference between machine learning vs. artificial intelligence?', 'text': 'AI includes everything from smart assistants like Alexa, chatbots, and image generators to robotic vacuum cleaners and self-driving cars'} 
+----
+{'source': 'AWS', 'topic': 'What is the difference between machine learning vs. artificial intelligence?', 'text': 'In contrast, machine learning models perform more specific data analysis tasks—like classifying documents, labeling images, or predicting the maintenance schedule of factory equipment'} 
+----
+{'source': 'AWS', 'topic': 'What is the difference between machine learning vs. artificial intelligence?', 'text': 'Machine learning technology is primarily based on mathematics and statistics, while other types of AI are more complex.  \nLearn more about machine learning vs. artificial intelligence'} 
+----
+{'source': 'AWS', 'topic': 'What is the difference between machine learning vs. deep learning?', 'text': 'is a specialized form of machine learning that uses artificial neural networks to mimic the human brain. It is an advanced technique for handling complex tasks like image and speech recognition. Deep learning laid the foundation for advances in .  \nDeep learning  \ngenerative artificial intelligence'} 
+----
+{'source': 'AWS', 'topic': 'How does machine learning work?', 'text': 'The central idea behind machine learning is an existing mathematical relationship between any input and output data combination. The machine learning model does not know this relationship in advance but can guess if sufficient examples of input-output data sets are given'} 
+----
+{'source': 'AWS', 'topic': 'How does machine learning work?', 'text': 'This means every machine learning algorithm is built around a modifiable math function'} 
+----
+{'source': 'AWS', 'topic': 'How does machine learning work?', 'text': ' The underlying principle can be understood like this:  \nWe ‘train’ the algorithm by giving it the following input/output (i,o) combinations – (2,10), (5,19), and (9,31)  \nThe algorithm computes the relationship between input and output to be: o=3*i+4  \nWe then give it input 7 and ask it to predict the output'} 
+----
+{'source': 'AWS', 'topic': 'How does machine learning work?', 'text': 'It can automatically determine the output as 25.  \nWhile this is a basic understanding, machine learning focuses on the principle that computer systems can mathematically link all complex data points as long as they have sufficient data and computing power to process'} 
+----
+{'source': 'AWS', 'topic': 'How does machine learning work?', 'text': 'Therefore, the accuracy of the output is directly co-relational to the magnitude of the input given. Machine learning phases are given below'} 
+----
+{'source': 'AWS', 'topic': 'Data preprocessing', 'text': "Raw data is cleaned and transformed to train a machine learning model. It involves tasks like handling missing values, normalizing data to a common scale, or encoding text data into numeric formats. Data may also be augmented or manipulated to improve the model's handling of the given use case. Preprocessing ensures the data fed into the model is relevant and structured appropriately."} 
+----
+{'source': 'AWS', 'topic': 'Training the model', 'text': 'The preprocessed data is used to train the machine learning algorithm. The algorithm tries to iteratively identify the mathematical correlation between the input and expected output from the training data. The model learns patterns and relationships within the data, encapsulating this knowledge in its parameters. It adjusts parameters to minimize the difference between its predictions and the actual outcomes known in the training data.'} 
+----
+{'source': 'AWS', 'topic': 'Evaluating the model', 'text': "The goal is to ensure the model can generalize beyond the training dataset. A separate dataset called the validation set is used for this purpose. The model output is measured using different metrics and benchmarks. For example, consider a model trained to identify pictures of fruits like apples and bananas kept in baskets. Evaluation checks if it can correctly identify the same fruits from images showing the fruits placed on a table or in someone's hand."} 
+----
+{'source': 'AWS', 'topic': 'Optimization', 'text': 'Optimization involves refining the model to improve its performance. Depending on the model type, data scientists can re-configure the learning processes or perform , which creates new input features from existing data. The goal is to enhance the model’s accuracy, efficiency, and ability to generalize well to new data.  \nfeature engineering'} 
+----
+{'source': 'AWS', 'topic': 'What are the benefits of machine learning?', 'text': 'Data is the critical driving force behind business decision-making. Modern organizations generate data from thousands of sources, including smart sensors, customer portals, social media, and application logs. Machine learning automates and optimizes the process of data collection, classification, and analysis. Businesses can drive growth, unlock new revenue streams, and solve challenging problems faster.  \nBenefits of machine learning include:'} 
+----
+{'source': 'AWS', 'topic': 'Enhanced decision making', 'text': 'Machine learning systems can process and analyze massive data volumes quickly and accurately. They can identify unforeseen patterns in dynamic and complex data in real time. Organizations can make data-driven decisions at runtime and respond more effectively to changing conditions. They can optimize operations and mitigate risks with confidence.'} 
+----
+{'source': 'AWS', 'topic': 'Automation of routine tasks', 'text': 'Machine learning algorithms can filter, sort, and classify data without human intervention. They can summarize reports, scan documents, transcribe audio, and tag content—tasks that are tedious and time-consuming for humans to perform. Automating routine and repetitive tasks leads to substantial productivity gains and cost reductions. You also get improved accuracy and efficiency.'} 
+----
+{'source': 'AWS', 'topic': 'Improved customer experiences', 'text': 'Machine learning transforms customer experiences through personalization. For example, retailers recommend products to customers based on previous purchases, browsing history, and search patterns. Streaming services customize viewing recommendations in the entertainment industry. The personalized approach increases customer retention and brand loyalty.'} 
+----
+{'source': 'AWS', 'topic': 'Proactive resource management', 'text': 'Organizations use machine learning to forecast trends and behaviors with high precision. For example, predictive analytics can anticipate inventory needs and optimize stock levels to reduce overhead costs. Predictive insights are crucial for planning and resource allocation, making organizations more proactive rather than reactive.'} 
+----
+{'source': 'AWS', 'topic': 'Continuous improvement', 'text': 'A distinctive advantage of machine learning is its ability to improve as it processes more data. Machine learning systems adapt and learn from new data. They adjust and enhance their performance to remain practical and relevant over time.'} 
+----
+{'source': 'AWS', 'topic': 'What are machine learning use cases?', 'text': 'Let’s take a look at machine learning applications in some key industries:'} 
+----
+{'source': 'AWS', 'topic': 'Manufacturing', 'text': 'Machine learning can support predictive maintenance, quality control, and innovative research in the manufacturing sector. It also helps companies improve logistical solutions, including assets, supply chain, and inventory management. For example, uses machine learning to innovate sandpaper'} 
+----
+{'source': 'AWS', 'topic': 'Manufacturing', 'text': 'Machine learning algorithms enable 3M researchers to analyze how slight changes in shape, size, and orientation improve abrasiveness and durability. Those suggestions inform the manufacturing process.  \nmanufacturing giant 3M'} 
+----
+{'source': 'AWS', 'topic': 'Healthcare and life sciences', 'text': 'The proliferation of wearable sensors and devices has generated significant health data. Machine learning programs analyze this information and support doctors in real-time diagnosis and treatment. Machine learning researchers are developing solutions that detect cancerous tumors and diagnose eye diseases, significantly impacting human health outcomes. For example, uses machine learning to automate and customize treatment for pregnant women.  \nCambia Health Solutions'} 
+----
+{'source': 'AWS', 'topic': 'Financial services', 'text': 'Financial machine learning projects improve risk analytics and regulation. Machine learning technology allows investors to identify new opportunities by analyzing stock market movements, evaluating hedge funds, or calibrating financial portfolios. In addition, it can help identify high-risk loan clients and mitigate signs of fraud. For example, , a personal finance company, uses machine learning to compare financial products like credit cards, banking, and loans.  \nNerdWallet'} 
+----
+{'source': 'AWS', 'topic': 'Retail', 'text': 'Retail can use machine learning to improve customer service, stock management, upselling, and cross-channel marketing. For example, cut infrastructure costs by 40 percent using a machine learning model to identify misplaced inventory. This helps them deliver on Amazon’s promise that an item will be readily available to customers and arrive on time despite processing millions of global shipments annually.  \nAmazon Fulfillment (AFT)'} 
+----
+{'source': 'AWS', 'topic': 'Media and entertainment', 'text': 'Entertainment companies turn to machine learning to better understand their target audiences and deliver immersive, personalized, and on-demand content'} 
+----
+{'source': 'AWS', 'topic': 'Media and entertainment', 'text': 'Machine learning algorithms are deployed to help design trailers and other advertisements, provide consumers with personalized content recommendations, and even streamline production.  \nFor example, uses machine learning to archive its media library'} 
+----
+{'source': 'AWS', 'topic': 'Media and entertainment', 'text': 'Machine learning tools automatically tag, describe, and sort media content, enabling Disney writers and animators to quickly search for and familiarize themselves with Disney characters.  \nDisney'} 
+----
+{'source': 'AWS', 'topic': 'Computer vision', 'text': 'Computer vision is a technology that automatically recognizes and describes images accurately and efficiently. Today, computer systems can access many images and videos from smartphones, traffic cameras, security systems, and other devices'} 
+----
+{'source': 'AWS', 'topic': 'Computer vision', 'text': 'Computer vision applications use machine learning to process this data accurately for object identification and facial recognition, as well as classification, recommendation, monitoring, and detection.  \nFor example, is a leading software platform for summer camps'} 
+----
+{'source': 'AWS', 'topic': 'Computer vision', 'text': 'Their camps upload thousands of images daily to connect parents to their children’s camp experience. Finding photos of their camper became a time-consuming and frustrating task for parents'} 
+----
+{'source': 'AWS', 'topic': 'Computer vision', 'text': 'CampSite uses machine learning to automatically identify images and notify parents when new photos of their child are uploaded.  \nCampSite'} 
+----
+{'source': 'AWS', 'topic': 'What are the types of machine learning algorithms?', 'text': 'Machine learning algorithms can be categorized into four distinct learning styles depending on the expected output and the input type.'} 
+----
+{'source': 'AWS', 'topic': 'Supervised machine learning', 'text': 'Data scientists supply algorithms with labeled and defined training data to assess for correlations. The sample data specifies both the input and the output of the algorithm. is categorizing input data with its corresponding defined output values'} 
+----
+{'source': 'AWS', 'topic': 'Supervised machine learning', 'text': 'For example, millions of apple and banana images would need to be tagged with the words “apple” or “banana.” Then, machine learning applications could use this training data to guess the name of the fruit when given a fruit image'} 
+----
+{'source': 'AWS', 'topic': 'Supervised machine learning', 'text': "Data labeling  \nThe strengths of supervised learning are simplicity and ease of design. It's useful when predicting a possible limited set of outcomes, dividing data into categories, or combining results from two other machine learning algorithms"} 
+----
+{'source': 'AWS', 'topic': 'Supervised machine learning', 'text': 'However, labeling millions of unlabeled data sets is challenging'} 
+----
+{'source': 'AWS', 'topic': 'Unsupervised machine learning', 'text': 'Unsupervised learning algorithms train on unlabeled data. They scan through new data, establishing meaningful connections between the inputs and predetermined outputs. They can spot patterns and categorize data'} 
+----
+{'source': 'AWS', 'topic': 'Unsupervised machine learning', 'text': 'For example, unsupervised algorithms could group news articles from different news sites into common categories like sports, crime, etc. They can use natural language processing to comprehend meaning and emotion in the article'} 
+----
+{'source': 'AWS', 'topic': 'Unsupervised machine learning', 'text': 'In retail, unsupervised learning could find patterns in customer purchases and provide data analysis results. For example, the customer is most likely to purchase bread if they also buy butter'} 
+----
+{'source': 'AWS', 'topic': 'Unsupervised machine learning', 'text': 'Unsupervised learning is useful for pattern recognition, anomaly detection, and automatically grouping data into categories. As the training data does not require labeling, setup is easy. These algorithms can also be used to clean and process data for automatic modeling'} 
+----
+{'source': 'AWS', 'topic': 'Unsupervised machine learning', 'text': 'The limitations of this method are that it cannot give precise predictions and cannot independently single out specific data outcomes'} 
+----
+{'source': 'AWS', 'topic': 'Semi-supervised learning', 'text': 'As the name suggests, this method combines supervised and unsupervised learning. The technique relies on using a small amount of labeled data and a large amount of unlabeled data to train systems. First, the labeled data is used to partially train the machine-learning algorithm'} 
+----
+{'source': 'AWS', 'topic': 'Semi-supervised learning', 'text': "After that, the partially trained algorithm labels the unlabeled data. This process is called pseudo-labeling. The model is then re-trained on the resulting data mix without being explicitly programmed.  \nThis method's advantage is that it does not require large amounts of labeled data"} 
+----
+{'source': 'AWS', 'topic': 'Semi-supervised learning', 'text': 'This is handy when working with data like long documents that would be too time-consuming for humans to read and label'} 
+----
+{'source': 'AWS', 'topic': 'Reinforcement learning', 'text': 'is a method with reward values attached to the different steps that the algorithm must go through. So, the model’s goal is to accumulate as many reward points as possible and eventually reach an end goal'} 
+----
+{'source': 'AWS', 'topic': 'Reinforcement learning', 'text': 'Most of the practical application of reinforcement learning in the past decade has been in video games. Cutting-edge reinforcement learning algorithms have achieved impressive results in classic and modern games, often significantly beating their human counterparts'} 
+----
+{'source': 'AWS', 'topic': 'Reinforcement learning', 'text': 'Reinforcement learning  \nThe challenge with reinforcement learning is that real-world environments change often, significantly, and with limited warning. It can make it harder for the algorithms to be effective in practice. Developer bias can also affect the outcomes'} 
+----
+{'source': 'AWS', 'topic': 'Reinforcement learning', 'text': 'As the data scientist designs the rewards, they can influence the results'} 
+----
+{'source': 'AWS', 'topic': 'Deep learning', 'text': 'is a type of machine learning technique that is modeled on the human brain. Deep learning algorithms analyze data with a logic structure similar to that used by humans. They use artificial neural networks to process information in layers'} 
+----
+{'source': 'AWS', 'topic': 'Deep learning', 'text': 'An artificial neural network (ANN) is made of software nodes called artificial neurons that process data collectively. Data flows from the input layer of neurons through multiple “deep” hidden neural network layers before coming to the output layer'} 
+----
+{'source': 'AWS', 'topic': 'Deep learning', 'text': 'The additional hidden layers support learning that’s far more capable than that of standard machine learning models.  \nDeep learning  \nLearn more about neural networks  \nLearn more about machine learning vs. deep learning'} 
+----
+{'source': 'AWS', 'topic': 'Are machine learning models deterministic?', 'text': "If a system’s output is predictable, then it is said to be deterministic. Most software applications respond predictably to the user's action, so you can say: “If the user does this, he gets that.” However, machine learning algorithms learn through observation along with experiences"} 
+----
+{'source': 'AWS', 'topic': 'Are machine learning models deterministic?', 'text': 'Therefore, they are probabilistic in nature. The statement now changes to: “If the user does this, there is an X% chance of that happening.”  \nIn machine learning, determinism is a strategy used while applying the learning methods described above'} 
+----
+{'source': 'AWS', 'topic': 'Are machine learning models deterministic?', 'text': "Any of the supervised, unsupervised, and other training methods can be made deterministic depending on the business's desired outcomes. The research question, data retrieval, structure, and storage decisions determine if a deterministic or non-deterministic strategy is adopted"} 
+----
+{'source': 'AWS', 'topic': 'Deterministic vs. probabilistic approach', 'text': 'The deterministic approach focuses on the accuracy and the amount of data collected, so efficiency is prioritized over uncertainty. On the other hand, the non-deterministic (or probabilistic) process is designed to manage the chance factor. Built-in tools are integrated into machine learning algorithms to help quantify, identify, and measure uncertainty during learning and observation.'} 
+----
+{'source': 'AWS', 'topic': 'How can you implement machine learning in your organization?', 'text': 'Getting started with machine learning requires implementing the machine learning lifecycle. It contains the following phases.'} 
+----
+{'source': 'AWS', 'topic': 'Business goal', 'text': 'An organization considering machine learning should first identify the problems it wants to solve. Identify the business value you gain by using machine learning in problem-solving. Can you measure the business value using specific success criteria for business objectives? A goal-oriented approach helps you justify expenditures and convince key stakeholders.'} 
+----
+{'source': 'AWS', 'topic': 'Problem framing', 'text': 'Next, frame the business problem as a machine learning problem. Identify what is observed and what should be predicted. A key step in this phase is to determine what to predict and how to optimize related performance and error metrics.'} 
+----
+{'source': 'AWS', 'topic': 'Data processing', 'text': 'Data processing converts data into a usable format using machine learning algorithms. It includes identifying, collecting, and preprocessing data along with feature engineering. You create, transform, extract, and select machine-learning variables from your data.'} 
+----
+{'source': 'AWS', 'topic': 'Model development and deployment', 'text': 'This is the core process of training, tuning, and evaluating your model, as described in the previous section. It includes establishing . Machine learning operations (MLOps) are a set of practices that automate and simplify machine learning (ML) workflows and deployments. They unify ML development with deployment and operations. For example, you create a CI/CD pipeline that automates the build, train, and release to staging and production environments.  \nMLOps'} 
+----
+{'source': 'AWS', 'topic': 'Monitoring', 'text': 'A model monitoring system ensures your model maintains a desired performance level through early detection and mitigation. It includes collecting user feedback to maintain and improve the model so it remains relevant over time.'} 
+----
+{'source': 'AWS', 'topic': 'What are the challenges in machine learning implementation?', 'text': 'Challenges in machine learning implementation are given below.'} 
+----
+{'source': 'AWS', 'topic': 'Data quality', 'text': "A machine learning model's performance depends on the data quality used for training. Issues such as missing values, inconsistent data entries, and noise can significantly degrade model accuracy. Additionally, the lack of a sufficiently large dataset can prevent the model from learning effectively. Ensuring data integrity and scaling up data collection without compromising quality are ongoing challenges."} 
+----
+{'source': 'AWS', 'topic': 'Overfitting and underfitting', 'text': "occurs when a machine learning model learns the details and noise in the training data to the extent that it negatively impacts the model's performance on new data. The model captures patterns that do not generalize to other data sets"} 
+----
+{'source': 'AWS', 'topic': 'Overfitting and underfitting', 'text': "On the other hand, underfitting happens when a model cannot learn the underlying pattern of the data, resulting in poor performance on both the training and testing data. Balancing the model's complexity and its ability to generalize is a critical challenge.  \nOverfitting"} 
+----
+{'source': 'AWS', 'topic': 'Bias', 'text': 'The data may be imbalanced in many real-world applications, meaning some classes are significantly more frequent than others. This imbalance can bias the training process, causing the model to perform well on the majority class while failing to predict the minority class accurately'} 
+----
+{'source': 'AWS', 'topic': 'Bias', 'text': 'For example, if historical data prioritizes a certain demographic, machine learning algorithms used in human resource applications may continue to prioritize those demographics'} 
+----
+{'source': 'AWS', 'topic': 'Bias', 'text': 'Techniques like data resampling, using different evaluation metrics, or applying anomaly detection algorithms mitigate the issue to some extent'} 
+----
+{'source': 'AWS', 'topic': 'Model explainability', 'text': 'As machine learning models, particularly deep learning models, become more complex, their decisions become less interpretable. Developing methods to make models more interpretable without sacrificing performance is an important challenge. It affects the usability, trustworthiness, and ethical considerations of deploying machine learning systems.'} 
+----
+{'source': 'AWS', 'topic': 'Scalability', 'text': 'Machine learning models, especially those that involve large datasets or complex algorithms like deep learning, require significant computational resources. Training these models can be time-consuming and costly. Optimizing algorithms to reduce computational demands involves challenges in algorithm design. AWS cloud-based services can support cost-efficient implementation at scale.'} 
+----
+{'source': 'AWS', 'topic': 'What is machine learning training for beginners?', 'text': "Machine learning requires a strong foundation in mathematics, statistics, coding, and data technologies. Those wishing to advance in machine learning should consider completing a master's degree in artificial intelligence or data science"} 
+----
+{'source': 'AWS', 'topic': 'What is machine learning training for beginners?', 'text': 'These programs typically involve topics such as neural networks, natural language processing, and computer vision in-depth.  \nHowever, formal education isn’t the only path. You can use online courses to learn at your own pace and master specific skills'} 
+----
+{'source': 'AWS', 'topic': 'What is machine learning training for beginners?', 'text': 'Machine learning training on AWS includes certifications by AWS experts on topics like:  \nMachine learning essentials for business and technical decision-makers  \nIntroduction to Amazon SageMaker  \nMachine learning - Learning plan for developers'} 
+----
+{'source': 'AWS', 'topic': 'How can AWS machine learning help?', 'text': 'AWS puts machine learning in the hands of every developer, data scientist, and business user. services provide high-performing, cost-effective, and scalable infrastructure to meet business needs.  \nAWS Machine Learning  \nLearn machine learning with our hands-on educational devices like and'} 
+----
+{'source': 'AWS', 'topic': 'How can AWS machine learning help?', 'text': 'Just starting?  \nAWS DeepRacer  \nAWS DeepComposer  \nUse for built-in data labeling workflows that support video, images, and text.  \nHave an existing data archive?  \nAmazon SageMaker Ground Truth  \nUse to detect bias and to monitor and optimize performance'} 
+----
+{'source': 'AWS', 'topic': 'How can AWS machine learning help?', 'text': 'Have existing Machine Learning systems?  \nAmazon SageMaker Clarify  \nAmazon SageMaker Model Training  \nUse to train large deep learning models automatically'} 
+----
+{'source': 'AWS', 'topic': 'How can AWS machine learning help?', 'text': 'Want to implement deep learning?  \nAmazon SageMaker Model Training  \nGet started with machine learning on AWS by today!  \ncreating a free account'} 
+----
+{'source': 'AWS', 'topic': 'Check out additional product-related resources', 'text': 'Learn more'} 
+----
+{'source': 'AWS', 'topic': 'Next steps on AWS', 'text': 'Instantly get access to the AWS Free Tier.  \nSign up'} 
+----
+{'source': 'AWS', 'topic': 'Next steps on AWS', 'text': 'Get started building with AWS in the AWS Management Console.  \nSign in'} 
+----
