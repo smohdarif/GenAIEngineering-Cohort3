@@ -9,6 +9,15 @@ einops
 google-genai
 python-dotenv
 
+# AI/LLM API Clients
+openai
+groq
+
+# Web Framework
+fastapi
+uvicorn
+streamlit
+
 # LangChain (for text splitting)
 langchain-text-splitters
 langchain
@@ -17,6 +26,7 @@ langchain-huggingface
 
 # Web scraping/parsing
 beautifulsoup4
+readability-lxml
 
 # Vector databases
 lancedb

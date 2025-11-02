@@ -24,6 +24,20 @@ class CaptureRequest(BaseModel):
 
 # ----------- API Endpoints -----------
 
+@app.get("/")
+def root():
+    """
+    Root endpoint - API information
+    """
+    return {
+        "message": "Knowledge Assistant API is running!",
+        "docs": "Visit /docs for interactive API documentation",
+        "endpoints": {
+            "POST /Capture_Knowledge": "Capture knowledge from a URL",
+            "GET /Ask_Assistant": "Ask questions to the assistant"
+        }
+    }
+
 @app.post("/Capture_Knowledge")
 def capture_knowledge(request: CaptureRequest):
     """
