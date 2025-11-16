@@ -1,0 +1,26 @@
+# LLM and AI Services
+mistralai
+python-dotenv
+
+# Web Framework
+streamlit
+
+# Vector Embeddings and Databases
+sentence-transformers
+lancedb
+faiss-cpu
+
+# Data Science and ML
+pandas
+numpy
+scikit-learn
+matplotlib
+
+# Additional utilities
+requests
+beautifulsoup4
+
+# Jupyter support
+ipykernel
+jupyter
+
