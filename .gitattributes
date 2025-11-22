@@ -1,0 +1,14 @@
+# Git attributes to help preserve your work during merges
+# Files marked with "ours" merge strategy will keep your version during conflicts
+
+# If you have personal notebooks or files you want to always keep your version:
+# my_personal_notebook.ipynb merge=ours
+# my_work_folder/** merge=ours
+
+# Example: Uncomment and modify these if you have specific files to protect
+# Week5/my_work.ipynb merge=ours
+# my_custom_changes.py merge=ours
+
+# Note: Be careful with merge=ours - it will always keep your version
+# even if upstream has important updates. Use selectively!
+
