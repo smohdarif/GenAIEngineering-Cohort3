@@ -1,16 +1,13 @@
 import asyncio
 from dotenv import load_dotenv
 from browser_use import Agent, BrowserSession
+from browser_use.llm.google.chat import ChatGoogle  # Use browser-use's Google Gemini
 from playwright.async_api import async_playwright
-from langchain_openai import ChatOpenAI
-from langchain_google_genai import ChatGoogleGenerativeAI
 
 import os
 load_dotenv()
 
 GOOGLE_API_KEY = os.getenv("GEMINI_KEY") # Define this in your .env
-
-openai_api_key =  os.getenv("OPENAI_API_KEY")
 
 #sensitive_data = {'email': os.getenv("EMAIL") , 'password': os.getenv("PASSWORD")}
 
@@ -25,8 +22,7 @@ async def main():
     async with async_playwright() as playwright:
         #browser_session = BrowserSession(user_data_dir= None)
 
-        llm = ChatOpenAI(model="gpt-4o", temperature=0.2,openai_api_key=openai_api_key)
-        #lm_google = Chat(model="gemini-2.0-flash", api_key=GOOGLE_API_KEY)
+        llm = ChatGoogle(model="gemini-2.5-flash", temperature=0.2, api_key=GOOGLE_API_KEY)
         #browser_session = BrowserSession(allowed_domains=['https://dev.to'], user_data_dir= None)
         browser_session = BrowserSession(user_data_dir= None)
 
