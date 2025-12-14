@@ -2,6 +2,21 @@
 Fast Multi-Agent News Aggregator
 Optimized for speed while still using multiple agents and tools
 """
+# import signal
+
+# # Comprehensive patch for Windows compatibility
+# if not hasattr(signal, 'SIGHUP'):
+#     signal.SIGHUP = 1
+# if not hasattr(signal, 'SIGQUIT'):
+#     signal.SIGQUIT = 3
+# if not hasattr(signal, 'SIGTSTP'):
+#     signal.SIGTSTP = 20
+# if not hasattr(signal, 'SIGCONT'):
+#     signal.SIGCONT = 18
+# if not hasattr(signal, 'SIGUSR1'):
+#     signal.SIGUSR1 = 10
+# if not hasattr(signal, 'SIGUSR2'):
+#     signal.SIGUSR2 = 12
 
 from crewai import Agent, Crew, Task, Process
 from crewai.tools import BaseTool
@@ -13,6 +28,8 @@ import json
 import os
 import asyncio
 import concurrent.futures
+
+
 
 
 class SearchInput(BaseModel):

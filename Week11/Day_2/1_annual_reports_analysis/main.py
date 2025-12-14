@@ -5,6 +5,22 @@ NO MODEL LOADING - Uses dummy embeddings for compatibility
 Uses YAML configuration files for agents and tasks
 """
 
+# import signal
+
+# # Comprehensive patch for Windows compatibility
+# if not hasattr(signal, 'SIGHUP'):
+#     signal.SIGHUP = 1
+# if not hasattr(signal, 'SIGQUIT'):
+#     signal.SIGQUIT = 3
+# if not hasattr(signal, 'SIGTSTP'):
+#     signal.SIGTSTP = 20
+# if not hasattr(signal, 'SIGCONT'):
+#     signal.SIGCONT = 18
+# if not hasattr(signal, 'SIGUSR1'):
+#     signal.SIGUSR1 = 10
+# if not hasattr(signal, 'SIGUSR2'):
+#     signal.SIGUSR2 = 12
+
 from crewai import Agent, Crew, Task, Process, LLM
 from crewai.project import CrewBase, agent, task, tool, crew, before_kickoff, after_kickoff
 from typing import List, Dict, Any, Optional
@@ -24,6 +40,10 @@ import json
 import faiss
 import numpy as np
 from abc import ABC, abstractmethod
+
+# import signal
+
+
 
 warnings.filterwarnings('ignore')
 
