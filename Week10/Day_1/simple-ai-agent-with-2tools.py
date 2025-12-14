@@ -159,10 +159,10 @@ if __name__ == "__main__":
     # Example queries
     
     # Math query - should use calculator
-    run_agent("What is 156 multiplied by 23?")
+    run_agent("What is 156 multiplied by 23? and What are the latest developments in AI this week?")
     
     # Web search query - should use web_search
-    run_agent("What are the latest developments in AI this week?")
+   # run_agent("What are the latest developments in AI this week?")
     
     # Another math query
     #run_agent("Calculate (100 + 50) / 3")
@@ -170,4 +170,4 @@ if __name__ == "__main__":
     # Current events - should use web_search
     #run_agent("Who won the latest NBA game?")
 
-    run_agent("What is the capital of France?")
+    #run_agent("What is the capital of France?")
