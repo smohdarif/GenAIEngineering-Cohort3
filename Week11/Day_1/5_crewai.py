@@ -1,5 +1,21 @@
 
 import os
+# import signal
+
+# # Comprehensive patch for Windows compatibility
+# if not hasattr(signal, 'SIGHUP'):
+#     signal.SIGHUP = 1
+# if not hasattr(signal, 'SIGQUIT'):
+#     signal.SIGQUIT = 3
+# if not hasattr(signal, 'SIGTSTP'):
+#     signal.SIGTSTP = 20
+# if not hasattr(signal, 'SIGCONT'):
+#     signal.SIGCONT = 18
+# if not hasattr(signal, 'SIGUSR1'):
+#     signal.SIGUSR1 = 10
+# if not hasattr(signal, 'SIGUSR2'):
+#     signal.SIGUSR2 = 12
+
 from dotenv import load_dotenv
 from crewai import Agent, Task, Crew, LLM, Process
 from crewai_tools import SerperDevTool
