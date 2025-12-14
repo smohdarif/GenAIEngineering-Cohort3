@@ -1,3 +1,20 @@
+# import signal
+
+# # Comprehensive patch for Windows compatibility
+# if not hasattr(signal, 'SIGHUP'):
+#     signal.SIGHUP = 1
+# if not hasattr(signal, 'SIGQUIT'):
+#     signal.SIGQUIT = 3
+# if not hasattr(signal, 'SIGTSTP'):
+#     signal.SIGTSTP = 20
+# if not hasattr(signal, 'SIGCONT'):
+#     signal.SIGCONT = 18
+# if not hasattr(signal, 'SIGUSR1'):
+#     signal.SIGUSR1 = 10
+# if not hasattr(signal, 'SIGUSR2'):
+#     signal.SIGUSR2 = 12
+
+
 from crewai import Agent, Crew, Task, Process
 from crewai.project import CrewBase, agent, task, crew, before_kickoff, after_kickoff
 from crewai.agents.agent_builder.base_agent import BaseAgent
@@ -5,6 +22,8 @@ from typing import List, Dict, Any
 import os
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
+
+
 
 load_dotenv()
 
@@ -138,7 +157,7 @@ class SDLCDevelopmentCrew:
     def analyze_business_requirements(self) -> Task:
         return Task(
             config=self.tasks_config['analyze_business_requirements']
-            
+
         )
 
     @task
