@@ -1,0 +1,25 @@
+# CrewAI Framework
+crewai
+
+# Environment & Config
+python-dotenv
+
+# PDF Processing
+pypdf2
+
+# API & Web
+requests
+httpx
+
+# Data Processing
+pandas
+
+# Vector DB & Embeddings (for RAG examples)
+faiss-cpu
+sentence-transformers
+
+# LLM Support
+openai
+langchain
+langchain-openai
+

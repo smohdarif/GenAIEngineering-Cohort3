@@ -20,9 +20,15 @@ import os
 from crewai import Agent, Task, Crew
 
 from dotenv import load_dotenv
-load_dotenv()
+# Load from Week11/.env (folder level)
+load_dotenv('/Users/arifshaikh/Documents/GitHub/GenAIEngineering-Cohort3/Week11/.env', override=True)
 
-os.environ["OPENAI_API_KEY"] = os.getenv("OPEN_ROUTER_KEY")
+OPEN_ROUTER_KEY = os.getenv("OPEN_ROUTER_KEY")
+if OPEN_ROUTER_KEY:
+    os.environ["OPENAI_API_KEY"] = OPEN_ROUTER_KEY
+    print(f"✅ OpenRouter key loaded ({len(OPEN_ROUTER_KEY)} chars)")
+else:
+    print("❌ OPEN_ROUTER_KEY not found in .env!")
 os.environ['OPENAI_API_BASE'] = 'https://openrouter.ai/api/v1'
 os.environ['OPENAI_BASE_URL'] = 'https://openrouter.ai/api/v1'
 
@@ -37,7 +43,9 @@ research_agent = Agent(
     innovations before they become mainstream. You have a methodical approach to
     research, always verifying sources and cross-referencing information. You're
     known for your ability to distill complex technical concepts into actionable insights.""",
-
+    
+    # Use a cheaper model - GPT-4o-mini via OpenRouter
+    llm="gpt-4o-mini",
 )
 
 
