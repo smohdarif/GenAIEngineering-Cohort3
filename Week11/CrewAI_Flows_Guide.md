@@ -79,6 +79,132 @@ class MyCompany:
         return Crew(agents=self.agents, tasks=self.tasks)
 ```
 
+### With vs Without Decorator (Full Example)
+
+**❌ WITHOUT Decorator (Manual Way):**
+
+```python
+def say_hello(name):
+    return f"Hello, {name}!"
+
+# Manually wrap it to add behavior
+def add_greeting(func):
+    def wrapper(name):
+        print("🎉 Starting...")
+        result = func(name)
+        print("✅ Done!")
+        return result
+    return wrapper
+
+# Manually apply
+say_hello = add_greeting(say_hello)
+
+say_hello("Arif")
+# Output:
+# 🎉 Starting...
+# ✅ Done!
+# "Hello, Arif!"
+```
+
+**✅ WITH Decorator (Clean Way):**
+
+```python
+def add_greeting(func):
+    def wrapper(name):
+        print("🎉 Starting...")
+        result = func(name)
+        print("✅ Done!")
+        return result
+    return wrapper
+
+@add_greeting  # ← Same thing, but cleaner!
+def say_hello(name):
+    return f"Hello, {name}!"
+
+say_hello("Arif")
+# Output:
+# 🎉 Starting...
+# ✅ Done!
+# "Hello, Arif!"
+```
+
+**🔑 Key Point - These are EXACTLY the same:**
+
+```python
+# Manual way:
+say_hello = add_greeting(say_hello)
+
+# Decorator way:
+@add_greeting
+def say_hello(name):
+    ...
+```
+
+The `@` is just syntactic sugar (shortcut) for wrapping a function! 🍬
+
+---
+
+### How Decorators Auto-Call Functions
+
+When you use `@some_function`, Python automatically:
+1. Takes your function
+2. Passes it to `some_function`
+3. Replaces your function with whatever `some_function` returns
+
+**Proof Example:**
+
+```python
+def my_decorator(func):
+    print(f"🔥 I received: {func.__name__}")  # This runs automatically!
+    return func
+
+@my_decorator  # ← This CALLS my_decorator and passes greet to it
+def greet():
+    print("Hello!")
+
+# Output (happens immediately when Python reads the code):
+# 🔥 I received: greet
+```
+
+**What Python Does Behind the Scenes:**
+
+```python
+@my_decorator
+def greet():
+    print("Hello!")
+
+# Python converts this to:
+greet = my_decorator(greet)  # ← Auto-calls my_decorator!
+```
+
+**Visual Flow:**
+
+```
+┌────────────────────────────────────────────────┐
+│  @my_decorator                                  │
+│  def greet():                                   │
+│      print("Hello!")                            │
+└────────────────────────────────────────────────┘
+                    ↓
+        Python automatically does:
+                    ↓
+┌────────────────────────────────────────────────┐
+│  greet = my_decorator(greet)                   │
+│                 ↑                              │
+│         Calls this function                    │
+│         with greet as argument                 │
+└────────────────────────────────────────────────┘
+```
+
+**So in CrewAI:**
+- `@agent` → Calls `agent()` function automatically
+- `@task` → Calls `task()` function automatically  
+- `@before_kickoff` → Calls `before_kickoff()` function automatically
+
+**The decorator function runs when Python loads the code, not when you call the decorated function!**
+
+---
+
 ### Why Use Decorators?
 
 1. **Cleaner Code**: Less boilerplate, more readable
