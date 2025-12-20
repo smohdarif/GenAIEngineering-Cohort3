@@ -28,10 +28,29 @@ __pycache__/
 # Log and database files
 *.log
 *.sqlite3
+agents.db
+**/agents.db
 
-# Environment files
+# Temporary/cache directories
+tmp/
+**/tmp/
+.cache/
+**/.cache/
+lancedb/
+**/lancedb/
+
+# Environment files (API keys, credentials)
 .env
 *.env
+.env.*
+*/.env
+**/.env
+
+# Secret/credential files
+*.key
+*.pem
+*credentials*
+*secrets*
 
 # Data files
 *.csv
