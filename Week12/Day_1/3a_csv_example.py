@@ -8,6 +8,7 @@ import os
 from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
+load_dotenv('/Users/arifshaikh/Documents/GitHub/GenAIEngineering-Cohort3/Week10/.env', override=True)
 
 os.environ["OPENAI_API_KEY"] = os.getenv("OPEN_ROUTER_KEY")
 os.environ["SERPER_API_KEY"] = os.getenv("SERPER_API_KEY")
@@ -38,4 +39,7 @@ agent = Agent(
     ],
 )
 # agent.cli_app(stream=False)
-agent.run("In which year the highest number of movies were released?")
+response = agent.run("In which year the highest number of movies were released?")
+print("\n" + "="*50)
+print("ANSWER:", response.content)
+print("="*50)
