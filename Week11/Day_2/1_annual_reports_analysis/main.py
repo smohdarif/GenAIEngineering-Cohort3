@@ -221,7 +221,7 @@ class FinancialAdvisorRAGCrew():
         self._setup_rag_system()
 
         # Initialize CrewBase parent
-        super().__init__()
+        # super().__init__()
 
     def _check_for_existing_index(self) -> bool:
         """Check if a FAISS index exists"""
