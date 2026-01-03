@@ -17,9 +17,11 @@ import json
 from news_crew import NewsAggregatorCrew, MockNewsAggregatorCrew
 
 dotenv.load_dotenv()
+dotenv.load_dotenv('/Users/arifshaikh/Documents/GitHub/GenAIEngineering-Cohort3/Week11/.env', override=True)
 
 # Set up environment variables
 os.environ["OPENAI_API_KEY"] = os.getenv("OPEN_ROUTER_KEY", "")
+print(f"✅ OpenRouter key loaded: {len(os.getenv('OPEN_ROUTER_KEY', ''))} chars")
 os.environ["OPENAI_API_BASE"] = 'https://openrouter.ai/api/v1'
 os.environ["OPENAI_BASE_URL"] = 'https://openrouter.ai/api/v1'
 

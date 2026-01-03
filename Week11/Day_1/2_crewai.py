@@ -19,16 +19,17 @@ from dotenv import load_dotenv
 from crewai import Agent, Task, Crew, LLM
 from crewai_tools import SerperDevTool
 
-load_dotenv()
+load_dotenv('../.env', override=True)
 
 os.environ["OPENAI_API_KEY"] = os.getenv("OPEN_ROUTER_KEY")
 os.environ['OPENAI_API_BASE'] = 'https://openrouter.ai/api/v1'
 os.environ['OPENAI_BASE_URL'] = 'https://openrouter.ai/api/v1'
 
 openai_llm = LLM(
-        model='openai/gpt-4o',
+        model='openai/gpt-4o-mini',
         api_key=os.getenv('OPEN_ROUTER_KEY'),
-        base_url="https://openrouter.ai/api/v1"
+        base_url="https://openrouter.ai/api/v1",
+        max_tokens=3000  # Stay within credit limit
     )
 
 search_tool = SerperDevTool()

@@ -28,6 +28,19 @@ import json
 import os
 import asyncio
 import concurrent.futures
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+load_dotenv('/Users/arifshaikh/Documents/GitHub/GenAIEngineering-Cohort3/Week11/.env', override=True)
+
+# Setup OpenRouter
+os.environ["OPENAI_API_KEY"] = os.getenv("OPEN_ROUTER_KEY") or ""
+os.environ['OPENAI_API_BASE'] = 'https://openrouter.ai/api/v1'
+os.environ['OPENAI_BASE_URL'] = 'https://openrouter.ai/api/v1'
+
+print(f"✅ OpenRouter key loaded: {len(os.getenv('OPEN_ROUTER_KEY', ''))} chars")
+print(f"✅ Serper key loaded: {len(os.getenv('SERPER_API_KEY', ''))} chars")
 
 
 
