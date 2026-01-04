@@ -20,11 +20,19 @@ from crewai import Agent, Task, Crew, LLM
 from crewai_tools import SerperDevTool
 from crewai.tools import tool
 
-load_dotenv()
+load_dotenv('../.env', override=True)
 
 os.environ["OPENAI_API_KEY"] = os.getenv("OPEN_ROUTER_KEY")
 os.environ['OPENAI_API_BASE'] = 'https://openrouter.ai/api/v1'
 os.environ['OPENAI_BASE_URL'] = 'https://openrouter.ai/api/v1'
+
+# Use cheaper model
+openai_llm = LLM(
+    model='openai/gpt-4o-mini',
+    api_key=os.getenv('OPEN_ROUTER_KEY'),
+    base_url="https://openrouter.ai/api/v1",
+    max_tokens=3000
+)
 
 
 
@@ -61,6 +69,7 @@ calculator = Agent(
     goal='calculate compound interest based on user input',
     backstory="""You're a banker.""",
     tools=[calculate_compound_interest],
+    llm=openai_llm,
 )
 
 calculate_task = Task(
